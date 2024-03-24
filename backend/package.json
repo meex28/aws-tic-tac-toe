@@ -5,11 +5,11 @@
     "ws": "^8.16.0"
   },
   "scripts": {
-    "start": "node server.js"
+    "start": "node src/server.js"
   },
   "name": "backend",
   "version": "1.0.0",
-  "main": "server.js",
+  "main": "src/server.js",
   "author": "",
   "license": "ISC",
   "description": ""
