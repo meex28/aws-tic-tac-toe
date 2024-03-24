@@ -34,12 +34,13 @@ module.exports.joinSession = (ws, nickname, playerId) => {
 
 
 module.exports.removeSession = (id) => {
+    console.log(`Removing session with id: ${id}`)
     const index = activeSessions.findIndex(session => session.id === id);
     if (index !== -1) {
         activeSessions.splice(index, 1);
     }
 }
 
-module.exports.findSession = (id) => (
-    activeSessions.find(session => session.id === id)
-)
+module.exports.findSession = (id) => {
+    return activeSessions.find(session => session.id === id)
+}

@@ -2,19 +2,30 @@
 import {useGame} from "@/composables/useGame";
 import BoardField from "@/components/BoardField.vue";
 
-const {game} = useGame()
+const {game, send} = useGame()
 
-const testState: string[] = ['0', '1', '2', '1', '2', '0', '0', '0', '0']
+const makeMove = (index: number) => {
+  const newState = game.value!!.state!!
+  newState[index] = game.value?.player?.symbol!!
+  send(JSON.stringify({
+    type: "MOVE",
+    body: {
+      sessionId: game.value!!.id,
+      state: game.value!!.state!!.reduce((acc, e) => `${acc}${e}`)
+    }
+  }))
+}
 </script>
 
 <template>
   <div class="board">
     <BoardField
-        v-for="(state, index) in testState"
+        v-for="(state, index) in game?.state"
         :key="index"
         :is-winning="false"
         :index="index"
         :state="state"
+        @click="makeMove(index)"
     />
   </div>
 </template>

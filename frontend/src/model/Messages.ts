@@ -20,3 +20,10 @@ export interface GameStartedMessage extends BaseMessage {
     }[]
   }
 }
+
+export interface MoveMessage extends BaseMessage {
+  body: {
+    sessionId: string,
+    state: string,
+  }
+}

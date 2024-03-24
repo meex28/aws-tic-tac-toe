@@ -1,6 +1,6 @@
 import {useWebSocket} from "@vueuse/core";
 import {ref, watch} from "vue";
-import type {BaseMessage, GameStartedMessage, WaitingMessage} from "@/model/Messages";
+import type {BaseMessage, GameStartedMessage, MoveMessage, WaitingMessage} from "@/model/Messages";
 import {MessageTypes} from "@/model/MessageTypes";
 import {useRouter} from "vue-router";
 import {ROUTES} from "@/router";
@@ -25,14 +25,22 @@ export const useGame = () => {
           router.push({name: ROUTES.WAITING})
           break;
         case MessageTypes.GAME_STARTED:
-          const body = (message as GameStartedMessage).body
+          const gameStartedBody = (message as GameStartedMessage).body
           game.value = {
-            id: body.sessionId,
-            player: body.players.find(p => p.id === player.id.value),
-            opponent: body.players.find(p => p.id !== player.id.value),
+            id: gameStartedBody.sessionId,
+            player: gameStartedBody.players.find(p => p.id === player.id.value),
+            opponent: gameStartedBody.players.find(p => p.id !== player.id.value),
             state: Array(9).fill('0')
           }
           router.push({name: ROUTES.BOARD})
+          break;
+        case MessageTypes.MOVE:
+          const moveBody = (message as MoveMessage).body;
+          game.value = {
+            ...game.value,
+            id: moveBody.sessionId,
+            state: moveBody.state.split('')
+          }
           break;
       }
     }
