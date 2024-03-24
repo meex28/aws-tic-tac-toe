@@ -55,6 +55,8 @@ function checkWinner(stateString) {
             return state[a];
         }
     }
+    if (state.some(e => e === '0'))
+        return undefined;
     return '0';
 }
 
@@ -64,15 +66,15 @@ function processMoveRequest(message, ws) {
         return;
     }
     const winner = checkWinner(message.body.state)
-    const messageType = winner === '0' ? 'MOVE' : 'GAME_OVER';
-    const messageBody = winner === '0' ? message.body : {...message.body, winner: winner};
+    const messageType = !winner ? 'MOVE' : 'GAME_OVER';
+    const messageBody = !winner ? message.body : {...message.body, winner: winner};
     session.players.forEach(player => {
         player.ws.send(JSON.stringify({
             type: messageType,
             body: {...messageBody, onTurn: Number(messageBody.onTurn) % 2 + 1},
         }));
     });
-    if (winner !== '0')
+    if (winner)
         removeSession(message.body.sessionId);
 }
 
@@ -94,4 +96,4 @@ wss.on('connection', function connection(ws) {
     });
 });
 
-server.listen(3000, () => console.log(`Lisening on port :3000`))
+server.listen(3000, () => console.log(`Listening on port :3000`))

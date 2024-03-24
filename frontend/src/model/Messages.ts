@@ -29,3 +29,11 @@ export interface MoveMessage extends BaseMessage {
     onTurn: string // symbol which has made a move
   }
 }
+
+export interface GameOverMessage extends BaseMessage {
+  body: {
+    sessionId: string,
+    state: string,
+    winner: string
+  }
+}

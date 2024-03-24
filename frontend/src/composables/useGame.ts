@@ -1,6 +1,6 @@
 import {useWebSocket} from "@vueuse/core";
 import {ref, watch} from "vue";
-import type {BaseMessage, GameStartedMessage, MoveMessage, WaitingMessage} from "@/model/Messages";
+import type {BaseMessage, GameOverMessage, GameStartedMessage, MoveMessage, WaitingMessage} from "@/model/Messages";
 import {MessageTypes} from "@/model/MessageTypes";
 import {useRouter} from "vue-router";
 import {ROUTES} from "@/router";
@@ -44,6 +44,16 @@ export const useGame = () => {
             id: moveBody.sessionId,
             state: moveBody.state.split(''),
             isPlayerTurn: moveBody.onTurn == game.value?.player?.symbol
+          }
+          break;
+        case MessageTypes.GAME_OVER:
+          const gameOverBody = (message as GameOverMessage).body
+          game.value = {
+            ...game.value,
+            id: gameOverBody.sessionId,
+            state: gameOverBody.state.split(''),
+            isPlayerTurn: undefined,
+            winner: gameOverBody.winner
           }
           break;
       }
