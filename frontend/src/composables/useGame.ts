@@ -25,12 +25,15 @@ export const useGame = () => {
           router.push({name: ROUTES.WAITING})
           break;
         case MessageTypes.GAME_STARTED:
-          const gameStartedBody = (message as GameStartedMessage).body
+          const gameStartedBody = (message as GameStartedMessage).body;
+          const gamePlayer = gameStartedBody.players
+            .find(p => p.id === player.id.value);
           game.value = {
             id: gameStartedBody.sessionId,
-            player: gameStartedBody.players.find(p => p.id === player.id.value),
+            player: gamePlayer,
             opponent: gameStartedBody.players.find(p => p.id !== player.id.value),
-            state: Array(9).fill('0')
+            state: Array(9).fill('0'),
+            isPlayerTurn: gameStartedBody.onTurn == gamePlayer!!.symbol
           }
           router.push({name: ROUTES.BOARD})
           break;
@@ -39,7 +42,8 @@ export const useGame = () => {
           game.value = {
             ...game.value,
             id: moveBody.sessionId,
-            state: moveBody.state.split('')
+            state: moveBody.state.split(''),
+            isPlayerTurn: moveBody.onTurn == game.value?.player?.symbol
           }
           break;
       }

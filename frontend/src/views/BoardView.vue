@@ -11,13 +11,16 @@ const makeMove = (index: number) => {
     type: "MOVE",
     body: {
       sessionId: game.value!!.id,
-      state: game.value!!.state!!.reduce((acc, e) => `${acc}${e}`)
+      state: game.value!!.state!!.reduce((acc, e) => `${acc}${e}`),
+      onTurn: game.value?.player?.symbol
     }
   }))
 }
 </script>
 
 <template>
+  <h1>{{ game!!.player!!.nickname }} vs {{ game!!.opponent!!.nickname }}</h1>
+  <h3>{{ game!!.isPlayerTurn ? 'Your turn' : 'Opponent turn' }}</h3>
   <div class="board">
     <BoardField
         v-for="(state, index) in game?.state"
@@ -25,7 +28,8 @@ const makeMove = (index: number) => {
         :is-winning="false"
         :index="index"
         :state="state"
-        @click="makeMove(index)"
+        :is-player-turn="game?.isPlayerTurn"
+        @click="game?.isPlayerTurn && makeMove(index)"
     />
   </div>
 </template>

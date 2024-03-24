@@ -11,5 +11,6 @@ export interface Game {
     symbol: string
   },
   state?: string[],
-  winner?: string
+  winner?: string,
+  isPlayerTurn?: boolean
 }

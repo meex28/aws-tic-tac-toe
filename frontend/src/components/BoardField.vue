@@ -5,6 +5,7 @@ const props = defineProps<{
   index: number;
   state: string;
   isWinning: boolean;
+  isPlayerTurn: boolean;
 }>()
 
 const classes = computed<string>(() => {
@@ -14,7 +15,7 @@ const classes = computed<string>(() => {
   if (props.index % 3 != 2) fieldClasses.push('border-right')
   if (props.index % 3 != 0) fieldClasses.push('border-left')
 
-  return fieldClasses.reduce((acc, e) => `${acc} ${e}`) + ` field ${props.state == '0' && 'empty-field'}`
+  return fieldClasses.reduce((acc, e) => `${acc} ${e}`) + ` field ${props.state == '0' && props.isPlayerTurn && 'active-field'}`
 })
 
 const image = computed<string>(() => {
@@ -43,7 +44,7 @@ $border-width: 7px;
   align-items: center;
 }
 
-.empty-field:hover {
+.active-field:hover {
   background-color: rgba(0, 0, 0, 0.1);
   cursor: pointer;
 }

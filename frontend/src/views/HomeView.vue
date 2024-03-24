@@ -24,7 +24,6 @@ const startGame = () => {
     <input v-model="nickname">
     <button @click="startGame">Play!</button>
   </div>
-  <div>DATA: {{ data }}</div>
 </template>
 
 <style lang="scss" scoped>

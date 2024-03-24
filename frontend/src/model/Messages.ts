@@ -17,7 +17,8 @@ export interface GameStartedMessage extends BaseMessage {
       nickname: string,
       id: string,
       symbol: string
-    }[]
+    }[],
+    onTurn: string
   }
 }
 
@@ -25,5 +26,6 @@ export interface MoveMessage extends BaseMessage {
   body: {
     sessionId: string,
     state: string,
+    onTurn: string // symbol which has made a move
   }
 }

@@ -21,7 +21,8 @@ function processStartRequest(message, ws) {
                         nickname: player.nickname,
                         id: player.id,
                         symbol: index + 1
-                    }))
+                    })),
+                    onTurn: '1'
                 }
             }));
         });
@@ -68,7 +69,7 @@ function processMoveRequest(message, ws) {
     session.players.forEach(player => {
         player.ws.send(JSON.stringify({
             type: messageType,
-            body: messageBody
+            body: {...messageBody, onTurn: Number(messageBody.onTurn) % 2 + 1},
         }));
     });
     if (winner !== '0')
@@ -80,19 +81,6 @@ const processMessage = (message, ws) => {
         processStartRequest(message, ws);
     } else if (message.type === 'MOVE') {
         processMoveRequest(message, ws);
-        const session = findSession(message.body.sessionId);
-        if (!session) {
-            console.error(`Cannot find session with id: ${message.body.sessionId}`)
-            return
-        }
-        session.players.forEach(player => {
-            if (player.ws !== ws) {
-                player.ws.send(JSON.stringify({
-                    type: 'MOVE',
-                    body: message.body
-                }));
-            }
-        });
     }
 }
 
