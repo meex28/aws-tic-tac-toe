@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: docker.io/meex8462/tic-tac-toe-frontend:latest
+    container_name: tic-tac-toe-frontend
+    ports:
+      - "80:80"
+  backend:
+    image: docker.io/meex8462/tic-tac-toe-backend:latest
+    container_name: tic-tac-toe-backend
+    expose:
+      - "3000"
