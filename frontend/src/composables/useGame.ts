@@ -7,12 +7,13 @@ import {ROUTES} from "@/router";
 import type {Game} from "@/model/Game";
 import {usePlayerData} from "@/composables/usePlayerData";
 
-const {status, send, data} = useWebSocket('ws://localhost:3000')
+const prodBackendUrl = window.location.href.replace('http://', 'ws://').replace('https://', 'wss://')
+const backendUrl = import.meta.env.PROD ? `${prodBackendUrl}/ws` : 'ws://localhost:3000'
+const {status, send, data} = useWebSocket(backendUrl)
 const game = ref<Game>()
 
 export const useGame = () => {
   const router = useRouter()
-  // TODO: replace url
   const player = usePlayerData()
 
   watch(data, (messageString) => {
