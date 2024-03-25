@@ -39,6 +39,8 @@ resource "aws_instance" "this" {
   subnet_id                   = var.subnet_id
   vpc_security_group_ids      = [aws_security_group.this.id]
   key_name                    = aws_key_pair.this.key_name
+  user_data                   = file("${path.module}/scripts/install_docker.sh")
+  user_data_replace_on_change = true
   tags                        = {
     Name = "tic-tac-toe-instance"
   }

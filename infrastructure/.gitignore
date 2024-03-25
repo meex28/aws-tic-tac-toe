@@ -1,1 +1,5 @@
 /aws/.terraform/
+/aws/key_pair/tic-tac-toe-key
+/aws/key_pair/tic-tac-toe-key.pub
+/aws/terraform.tfstate
+/aws/terraform.tfstate.backup
