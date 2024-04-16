@@ -1,70 +1,40 @@
-import {useWebSocket} from "@vueuse/core";
-import {ref, watch} from "vue";
-import type {BaseMessage, GameOverMessage, GameStartedMessage, MoveMessage, WaitingMessage} from "@/model/Messages";
-import {MessageTypes} from "@/model/MessageTypes";
+import {ref, watchEffect} from "vue";
+import type {GameOverMessage, GameStartedMessage, MoveMessage, WaitingMessage} from "@/model/message";
 import {useRouter} from "vue-router";
 import {ROUTES} from "@/router";
-import type {Game} from "@/model/Game";
-import {usePlayerData} from "@/composables/usePlayerData";
+import type {GameSession} from "@/model/game";
+import {usePlayer} from "@/composables/usePlayer";
+import {useGameWebSocket} from "@/composables/useGameWebSocket";
+import {mapGameOver, mapGameStarted, mapMove, mapWaiting} from "@/utils/messageMapping";
 
-const prodBackendUrl = window.location.href.replace('http://', 'ws://').replace('https://', 'wss://')
-const backendUrl = import.meta.env.PROD ? `${prodBackendUrl}/ws` : 'ws://localhost:3000'
-const {status, send, data} = useWebSocket(backendUrl)
-const game = ref<Game>()
+const gameSession = ref<GameSession>()
 
 export const useGame = () => {
   const router = useRouter()
-  const player = usePlayerData()
+  const player = usePlayer()
+  const {sendGameMessage, receivedMessage} = useGameWebSocket()
 
-  watch(data, (messageString) => {
-      const message = JSON.parse(messageString) as BaseMessage
-      switch (message.type) {
-        case MessageTypes.WAITING:
-          game.value = {
-            id: (message as WaitingMessage).body.sessionId
-          }
-          router.push({name: ROUTES.WAITING})
-          break;
-        case MessageTypes.GAME_STARTED:
-          const gameStartedBody = (message as GameStartedMessage).body;
-          const gamePlayer = gameStartedBody.players
-            .find(p => p.id === player.id.value);
-          game.value = {
-            id: gameStartedBody.sessionId,
-            player: gamePlayer,
-            opponent: gameStartedBody.players.find(p => p.id !== player.id.value),
-            state: Array(9).fill('0'),
-            isPlayerTurn: gameStartedBody.onTurn == gamePlayer!!.symbol
-          }
-          router.push({name: ROUTES.BOARD})
-          break;
-        case MessageTypes.MOVE:
-          const moveBody = (message as MoveMessage).body;
-          game.value = {
-            ...game.value,
-            id: moveBody.sessionId,
-            state: moveBody.state.split(''),
-            isPlayerTurn: moveBody.onTurn == game.value?.player?.symbol
-          }
-          break;
-        case MessageTypes.GAME_OVER:
-          const gameOverBody = (message as GameOverMessage).body
-          game.value = {
-            ...game.value,
-            id: gameOverBody.sessionId,
-            state: gameOverBody.state.split(''),
-            isPlayerTurn: undefined,
-            winner: gameOverBody.winner
-          }
-          break;
-      }
+  watchEffect(() => {
+    switch (receivedMessage.value?.type) {
+      case "WAITING":
+        gameSession.value = mapWaiting(receivedMessage.value as WaitingMessage);
+        router.push({name: ROUTES.WAITING})
+        break;
+      case "GAME_STARTED":
+        gameSession.value = mapGameStarted(receivedMessage.value as GameStartedMessage, player.id.value);
+        router.push({name: ROUTES.BOARD});
+        break;
+      case "MOVE":
+        gameSession.value = mapMove(receivedMessage.value as MoveMessage, gameSession.value!!);
+        break;
+      case "GAME_OVER":
+        gameSession.value = mapGameOver(receivedMessage.value as GameOverMessage, gameSession.value!!);
+        break;
     }
-  );
+  })
 
   return {
-    game,
-    status,
-    send,
-    data
+    gameSession,
+    sendGameMessage
   }
 }

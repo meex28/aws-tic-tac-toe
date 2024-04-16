@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import {useGame} from "@/composables/useGame";
 
-const {} = useGame()
+useGame()
 </script>
 
 <template>

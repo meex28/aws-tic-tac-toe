@@ -1,7 +1,16 @@
-import type {MessageTypes} from "@/model/MessageTypes";
+import type {GameSymbol} from "@/model/game";
+
+export type MessageType = 'MOVE' | 'GAME_OVER' | 'GAME_STARTED' | 'WAITING' | 'START_REQUEST';
 
 export interface BaseMessage {
-  type: MessageTypes
+  type: MessageType
+}
+
+export interface StartRequestMessage extends BaseMessage {
+  body: {
+    nickname: string
+    playerId: string
+  }
 }
 
 export interface WaitingMessage extends BaseMessage {
@@ -16,24 +25,24 @@ export interface GameStartedMessage extends BaseMessage {
     players: {
       nickname: string,
       id: string,
-      symbol: string
+      symbol: GameSymbol
     }[],
-    onTurn: string
+    onMove: GameSymbol
   }
 }
 
 export interface MoveMessage extends BaseMessage {
   body: {
     sessionId: string,
-    state: string,
-    onTurn: string // symbol which has made a move
+    board: string,
+    onMove: GameSymbol
   }
 }
 
 export interface GameOverMessage extends BaseMessage {
   body: {
     sessionId: string,
-    state: string,
-    winner: string
+    board: string,
+    winner: GameSymbol
   }
 }

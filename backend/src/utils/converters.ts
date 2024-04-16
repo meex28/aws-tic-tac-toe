@@ -15,7 +15,7 @@ export const buildGameStartedMessage = (session: Session, onMove: GameSymbol): G
     players: session.players.map((player, index) => ({
       nickname: player.nickname,
       id: player.id,
-      symbol: String(index + 1)
+      symbol: String(index + 1) as GameSymbol
     })),
     onMove: onMove
   }

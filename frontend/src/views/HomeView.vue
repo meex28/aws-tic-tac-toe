@@ -1,28 +1,25 @@
 <script setup lang="ts">
 import {useGame} from "@/composables/useGame";
-import {MessageTypes} from "@/model/MessageTypes";
-import {usePlayerData} from "@/composables/usePlayerData";
+import {usePlayer} from "@/composables/usePlayer";
+import type {StartRequestMessage} from "@/model/message";
 
-const {nickname, id} = usePlayerData()
-const {status, data, send} = useGame()
+const {nickname, id} = usePlayer()
+const {sendGameMessage} = useGame()
 
-const startGame = () => {
-  send(JSON.stringify({
-    type: MessageTypes.START,
-    body: {
-      nickname: nickname.value,
-      playerId: id.value
-    }
-  }))
-}
-
+const sendStartRequest = () => sendGameMessage({
+  type: "START_REQUEST",
+  body: {
+    nickname: nickname.value,
+    playerId: id.value
+  }
+} as StartRequestMessage)
 </script>
 
 <template>
   <div class="container">
     <h1>Type your nickname</h1>
     <input v-model="nickname">
-    <button @click="startGame">Play!</button>
+    <button @click="sendStartRequest">Play!</button>
   </div>
 </template>
 
