@@ -2,6 +2,9 @@
 import {useGame} from "@/composables/useGame";
 import {usePlayer} from "@/composables/usePlayer";
 import type {StartRequestMessage} from "@/model/message";
+import CoreDialog from "@/components/core/CoreDialog.vue";
+import CoreButton from "@/components/core/CoreButton.vue";
+import CoreInput from "@/components/core/CoreInput.vue";
 
 const {nickname, id} = usePlayer()
 const {sendGameMessage} = useGame()
@@ -16,11 +19,11 @@ const sendStartRequest = () => sendGameMessage({
 </script>
 
 <template>
-  <div class="container">
+  <CoreDialog>
     <h1>Type your nickname</h1>
-    <input v-model="nickname">
-    <button @click="sendStartRequest">Play!</button>
-  </div>
+    <CoreInput v-model="nickname"/>
+    <CoreButton @click="sendStartRequest">Play!</CoreButton>
+  </CoreDialog>
 </template>
 
 <style lang="scss" scoped>
@@ -36,29 +39,13 @@ const sendStartRequest = () => sendGameMessage({
   h1 {
     font-size: 24px;
     margin-bottom: 20px;
+    color: white;
   }
 
   input {
     width: 100%;
     height: 40px;
     margin-bottom: 20px;
-    padding: 0 10px;
-    font-size: 16px;
-  }
-
-  button {
-    width: 30%;
-    height: 40px;
-    background-color: #007bff;
-    color: white;
-    font-size: 16px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-
-  button:hover {
-    background-color: #0056b3;
   }
 }
 </style>
