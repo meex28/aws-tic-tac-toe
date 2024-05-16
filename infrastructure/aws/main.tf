@@ -8,3 +8,7 @@ module "ec2" {
   subnet_id  = module.vpc.public_subnets_ids[0]
   public_key = file("${path.module}/key_pair/tic-tac-toe-key.pub")
 }
+
+module "cognito" {
+  source = "./modules/cognito"
+}
