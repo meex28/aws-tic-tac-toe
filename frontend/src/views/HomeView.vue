@@ -4,8 +4,11 @@ import {usePlayer} from "@/composables/usePlayer";
 import type {StartRequestMessage} from "@/model/message";
 import CoreDialog from "@/components/core/CoreDialog.vue";
 import CoreButton from "@/components/core/CoreButton.vue";
+import {useCognitoAuth} from "@/composables/useCognitoAuth";
+import {computed} from "vue";
 
-const {nickname, id} = usePlayer()
+const {signIn, signOut} = useCognitoAuth()
+const {nickname, id, isAuthorized} = usePlayer()
 const {sendGameMessage} = useGame()
 
 const sendStartRequest = () => sendGameMessage({
@@ -15,13 +18,23 @@ const sendStartRequest = () => sendGameMessage({
     playerId: id.value
   }
 } as StartRequestMessage)
+
+const title = computed(() => isAuthorized.value
+    ? `Hi ${nickname.value}!`
+    : "Sign in to play a game"
+)
 </script>
 
 <template>
   <CoreDialog class="container">
-    <h1>Type your nickname</h1>
-    <input v-model="nickname"/>
-    <CoreButton @click="sendStartRequest">Play!</CoreButton>
+    <h1>{{ title }}</h1>
+    <template v-if="isAuthorized">
+      <CoreButton @click="sendStartRequest">Play!</CoreButton>
+      <CoreButton @click="signOut">Sign out</CoreButton>
+    </template>
+    <template v-else>
+      <CoreButton @click="signIn">Sign in</CoreButton>
+    </template>
   </CoreDialog>
 </template>
 
@@ -39,6 +52,10 @@ const sendStartRequest = () => sendGameMessage({
     width: 100%;
     height: 40px;
     margin-bottom: 20px;
+  }
+
+  button:last-child {
+    margin-top: 10px;
   }
 }
 </style>

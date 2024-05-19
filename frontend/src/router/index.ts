@@ -2,11 +2,13 @@ import {createRouter, createWebHistory} from 'vue-router'
 import HomeView from '../views/HomeView.vue'
 import WaitingView from "@/views/WaitingView.vue";
 import BoardView from "@/views/BoardView.vue";
+import CallbackView from "@/views/CallbackView.vue";
 
 export enum ROUTES {
   HOME = 'home',
   WAITING = 'waiting',
-  BOARD = 'board'
+  BOARD = 'board',
+  CALLBACK = 'callback',
 }
 
 const router = createRouter({
@@ -26,6 +28,11 @@ const router = createRouter({
       path: `/${ROUTES.BOARD}`,
       name: ROUTES.BOARD,
       component: BoardView
+    },
+    {
+      path: '/callback',
+      name: ROUTES.CALLBACK,
+      component: CallbackView
     }
   ]
 })
