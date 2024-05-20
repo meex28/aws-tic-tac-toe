@@ -2,16 +2,11 @@ import {CognitoJwtVerifier} from "aws-jwt-verify";
 
 const verifier = CognitoJwtVerifier.create({
   // TODO: env vars
-  userPoolId: "us-east-1_zdy7Xi5ey",
+  userPoolId: "us-east-1_8OC2DPj9E",
   tokenUse: "access",
-  clientId: "n77jnmh7cfjt6jr47jfv4171i",
+  clientId: "2jbpf4smqhtoklvduiat62vjs8",
 });
 
 export const authorizeCognitoJwtToken = async (token: string) => {
-  try {
-    return await verifier.verify(token);
-  } catch {
-    // TODO: is this correct? What should I catch?
-    throw new Error("Unauthorized");
-  }
+  return await verifier.verify(token);
 }

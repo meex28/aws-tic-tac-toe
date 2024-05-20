@@ -25,11 +25,10 @@ const processMessage = (ws: WebSocket, ms: WebSocket.RawData) => {
   }
 }
 
-wss.on('connection', function connection(ws, request) {
-  console.log('A new connection is established!');
-  const token = request.headers.authorization ?? "";
-  authorizeCognitoJwtToken(token).then((payload) => {
-    console.log(`User ${payload.username} is authorized! Payload: ${JSON.stringify(payload)}`);
+wss.on('connection', async function connection(ws, request) {
+  const urlToken = new URLSearchParams(request.url?.split('?')[1]).get('token');
+  await authorizeCognitoJwtToken(urlToken ?? "").then((token) => {
+    console.log(`A new connection is established! Player: ${token.username}`);
     ws.on('message', (ms) => processMessage(ws, ms));
   }).catch((err) => {
     console.log(`Unauthorized: ${err}`);
