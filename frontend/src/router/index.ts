@@ -3,12 +3,14 @@ import HomeView from '../views/HomeView.vue'
 import WaitingView from "@/views/WaitingView.vue";
 import BoardView from "@/views/BoardView.vue";
 import CallbackView from "@/views/CallbackView.vue";
+import PlayerGamesView from "@/views/PlayerGamesView.vue";
 
 export enum ROUTES {
   HOME = 'home',
   WAITING = 'waiting',
   BOARD = 'board',
   CALLBACK = 'callback',
+  PLAYER_GAMES = 'games'
 }
 
 const router = createRouter({
@@ -30,10 +32,15 @@ const router = createRouter({
       component: BoardView
     },
     {
-      path: '/callback',
+      path: `/${ROUTES.CALLBACK}`,
       name: ROUTES.CALLBACK,
       component: CallbackView
-    }
+    },
+    {
+      path: `/${ROUTES.PLAYER_GAMES}`,
+      name: ROUTES.PLAYER_GAMES,
+      component: PlayerGamesView
+    },
   ]
 })
 

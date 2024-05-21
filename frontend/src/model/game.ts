@@ -14,3 +14,10 @@ export interface GameSession {
   winner?: GameSymbol,
   isPlayerOnMove?: boolean
 }
+
+export interface GameResultResponse {
+  id: string;
+  hostNickname: string;
+  guestNickname: string;
+  result: "WIN" | "DRAW" | "LOOSE";
+}
