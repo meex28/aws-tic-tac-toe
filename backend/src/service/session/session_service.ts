@@ -1,5 +1,5 @@
 import {v4 as uuid} from "uuid";
-import {Player, Session} from "./model/session";
+import {Player, Session} from "../../model/session";
 
 const activeSessions: Session[] = [];
 

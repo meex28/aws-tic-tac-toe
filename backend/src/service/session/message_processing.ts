@@ -1,11 +1,11 @@
 import WebSocket from "ws";
-import {MoveMessage, StartRequestMessage} from "./model/message";
-import {deleteSession, findSession, joinSession} from "./session";
-import {buildGameOverMessage, buildGameStartedMessage, buildWaitingMessage, mapToPlayer} from "./utils/converters";
+import {MoveMessage, StartRequestMessage} from "../../model/message";
+import {deleteSession, findSession, joinSession} from "./session_service";
+import {buildGameOverMessage, buildGameStartedMessage, buildWaitingMessage, mapToPlayer} from "../../utils/converters";
 import {sendMessageToPlayers} from "./send_message";
-import {GameSymbol} from "./model/session";
+import {GameSymbol} from "../../model/session";
 import {CognitoAccessTokenPayload} from "aws-jwt-verify/jwt-model";
-import {saveSessionResults} from "./game";
+import {saveGameResult} from "../game_results/game_results_service";
 
 export const onStartRequest = (ws: WebSocket, message: StartRequestMessage, token: CognitoAccessTokenPayload) => {
   const session = joinSession(mapToPlayer(ws, message.body, token.sub));
@@ -55,7 +55,7 @@ export const onMove = (ws: WebSocket, message: MoveMessage) => {
     sendMessageToPlayers(session, message)
   } else {
     sendMessageToPlayers(session, buildGameOverMessage(message, winner))
-    saveSessionResults(session, winner);
+    saveGameResult(session, winner);
     deleteSession(message.body.sessionId);
   }
 }

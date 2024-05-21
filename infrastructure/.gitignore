@@ -4,3 +4,5 @@
 /aws/terraform.tfstate
 /aws/terraform.tfstate.backup
 /localstack/.terraform/
+/localstack/terraform.tfstate
+/localstack/terraform.tfstate.backup
