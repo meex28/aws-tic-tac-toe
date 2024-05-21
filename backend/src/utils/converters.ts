@@ -43,22 +43,20 @@ export const serializeMessage = (message: any) => JSON.stringify(message);
 
 export const mapToGameResult = (session: Session, winner: GameSymbol): GameResult => ({
   id: session.id,
-  host_player_sub: session.players[0].sub,
-  host_player_nickname: session.players[0].nickname,
-  guest_player_sub: session.players[1].sub,
-  guest_player_nickname: session.players[1].nickname,
+  hostPlayerSub: session.players[0].sub,
+  hostPlayerNickname: session.players[0].nickname,
+  guestPlayerSub: session.players[1].sub,
+  guestPlayerNickname: session.players[1].nickname,
   winner: winner === '1' ? "HOST" : winner === '2' ? "GUEST" : "DRAW"
 })
 
 export const mapToGameResultResponse = (gameResult: GameResult, requestingPlayerSub: string): GameResultResponse => {
-  const hasWon = (gameResult.host_player_sub == requestingPlayerSub && gameResult.winner == "HOST")
-    || (gameResult.host_player_sub == requestingPlayerSub && gameResult.winner == "HOST");
+  const hasWon = (gameResult.hostPlayerSub == requestingPlayerSub && gameResult.winner == "HOST")
+    || (gameResult.hostPlayerSub == requestingPlayerSub && gameResult.winner == "HOST");
   return {
     id: gameResult.id,
-    host_player_nickname:
-    gameResult.host_player_nickname,
-    guest_player_nickname:
-    gameResult.guest_player_nickname,
+    hostNickname: gameResult.hostPlayerNickname,
+    guestNickname: gameResult.guestPlayerNickname,
     result: hasWon
       ? "WIN"
       : gameResult.winner == "DRAW"

@@ -21,24 +21,24 @@ resource "aws_dynamodb_table" "games_results_table" {
   }
 
   attribute {
-    name = "host_player_sub"
+    name = "hostPlayerSub"
     type = "S"
   }
 
   attribute {
-    name = "guest_player_sub"
+    name = "guestPlayerSub"
     type = "S"
   }
 
   global_secondary_index {
-    name            = "host_player_sub-index"
-    hash_key        = "host_player_sub"
+    name     = "hostPlayerSub-index"
+    hash_key = "hostPlayerSub"
     projection_type = "ALL"
   }
 
   global_secondary_index {
-    name            = "guest_player_sub-index"
-    hash_key        = "guest_player_sub"
+    name     = "guestPlayerSub-index"
+    hash_key = "guestPlayerSub"
     projection_type = "ALL"
   }
 }

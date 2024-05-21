@@ -27,16 +27,16 @@ export const saveGameResult = async (session: Session, winner: GameSymbol) => {
 export const getUserGamesResults = async (sub: string): Promise<GameResultResponse[]> => {
   const paramsHost = {
     TableName: GAMES_RESULTS_TABLE,
-    IndexName: 'host_player_sub-index',
-    KeyConditionExpression: 'host_player_sub = :sub',
+    IndexName: 'hostPlayerSub-index',
+    KeyConditionExpression: 'hostPlayerSub = :sub',
     ExpressionAttributeValues: {
       ':sub': sub,
     },
   };
   const paramsGuest = {
     TableName: GAMES_RESULTS_TABLE,
-    IndexName: 'guest_player_sub-index',
-    KeyConditionExpression: 'guest_player_sub = :sub',
+    IndexName: 'guestPlayerSub-index',
+    KeyConditionExpression: 'guestPlayerSub = :sub',
     ExpressionAttributeValues: {
       ':sub': sub,
     },

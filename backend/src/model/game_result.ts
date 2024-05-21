@@ -1,16 +1,16 @@
 // entity saved in the database
 export interface GameResult {
   id: string;
-  host_player_sub: string;
-  host_player_nickname: string;
-  guest_player_sub: string;
-  guest_player_nickname: string;
+  hostPlayerSub: string;
+  hostPlayerNickname: string;
+  guestPlayerSub: string;
+  guestPlayerNickname: string;
   winner: "HOST" | "GUEST" | "DRAW";
 }
 
 export interface GameResultResponse {
   id: string;
-  host_player_nickname: string;
-  guest_player_nickname: string;
+  hostNickname: string;
+  guestNickname: string;
   result: "WIN" | "DRAW" | "LOOSE";
 }
