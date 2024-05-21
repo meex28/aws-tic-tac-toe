@@ -1,8 +1,8 @@
 <script setup lang="ts">
-import {useFetchPlayerGames} from "@/composables/useFetchPlayerGames";
+import {useFetchPlayerGamesResults} from "@/composables/api/useGameResultsApi";
 import {computed} from "vue";
 
-const {data: playerGames} = useFetchPlayerGames();
+const {data: playerGames} = useFetchPlayerGamesResults();
 
 const gamesCount = computed(() => playerGames.value?.length);
 const gamesBalance = computed(() => ({

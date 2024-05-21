@@ -57,6 +57,28 @@ export const useCognitoAuth = () => {
     refreshToken.value = "";
   }
 
+  const refresh = async () => {
+    const {data, error} = await useFetch(`https://${domain}/oauth2/token`, {
+      beforeFetch(ctx) {
+        ctx.options.headers = {
+          ...ctx.options.headers,
+          'Content-Type': 'application/x-www-form-urlencoded'
+        }
+      },
+    }).post(new URLSearchParams({
+      grant_type: 'refresh_token',
+      client_id: clientId,
+      refresh_token: refreshToken.value
+    })).json();
+    if (error.value) {
+      console.error(`Error refreshing token: ${error.value}`);
+      return;
+    }
+    accessToken.value = data.value.access_token;
+    idToken.value = data.value.id_token;
+    refreshToken.value = data.value.refresh_token;
+  }
+
   return {
     signIn,
     onCallback,
