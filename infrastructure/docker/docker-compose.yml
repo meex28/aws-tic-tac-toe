@@ -11,3 +11,9 @@ services:
     container_name: tic-tac-toe-backend
     expose:
       - "3000"
+  localstack:
+    image: localstack/localstack
+    ports:
+      - "4566:4566"
+    environment:
+      - SERVICES=dynamodb

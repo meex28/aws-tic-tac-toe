@@ -3,3 +3,4 @@
 /aws/key_pair/tic-tac-toe-key.pub
 /aws/terraform.tfstate
 /aws/terraform.tfstate.backup
+/localstack/.terraform/

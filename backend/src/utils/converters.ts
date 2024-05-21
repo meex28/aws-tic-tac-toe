@@ -2,9 +2,10 @@ import WebSocket from "ws";
 import {GameSymbol, Player, Session} from "../model/session";
 import {GameOverMessage, GameStartedMessage, MoveMessage, WaitingMessage} from "../model/message";
 
-export const mapToPlayer = (ws: WebSocket, obj: { nickname: string, playerId: string }): Player => ({
+export const mapToPlayer = (ws: WebSocket, obj: { nickname: string, playerId: string }, sub: string): Player => ({
   id: obj.playerId,
   nickname: obj.nickname,
+  sub,
   ws
 })
 

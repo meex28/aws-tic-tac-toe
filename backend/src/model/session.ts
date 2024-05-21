@@ -10,5 +10,6 @@ export interface Session {
 export interface Player {
   id: string;
   nickname: string;
+  sub: string;
   ws: WebSocket;
 }

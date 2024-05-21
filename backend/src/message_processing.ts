@@ -4,9 +4,11 @@ import {deleteSession, findSession, joinSession} from "./session";
 import {buildGameOverMessage, buildGameStartedMessage, buildWaitingMessage, mapToPlayer} from "./utils/converters";
 import {sendMessageToPlayers} from "./send_message";
 import {GameSymbol} from "./model/session";
+import {CognitoAccessTokenPayload} from "aws-jwt-verify/jwt-model";
+import {saveSessionResults} from "./game";
 
-export const onStartRequest = (ws: WebSocket, message: StartRequestMessage) => {
-  const session = joinSession(mapToPlayer(ws, message.body));
+export const onStartRequest = (ws: WebSocket, message: StartRequestMessage, token: CognitoAccessTokenPayload) => {
+  const session = joinSession(mapToPlayer(ws, message.body, token.sub));
   const isSessionFull = session.players.length === 2;
 
   if (isSessionFull) {
@@ -53,6 +55,7 @@ export const onMove = (ws: WebSocket, message: MoveMessage) => {
     sendMessageToPlayers(session, message)
   } else {
     sendMessageToPlayers(session, buildGameOverMessage(message, winner))
+    saveSessionResults(session, winner);
     deleteSession(message.body.sessionId);
   }
 }
