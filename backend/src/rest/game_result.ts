@@ -11,7 +11,9 @@ router.get('/', async (req, res) => {
     console.error(err)
     res.status(401).send("Unauthorized");
   })
-  const userGames = await getUserGamesResults(tokenPayload!!.sub);
+  const userGames = await getUserGamesResults(tokenPayload!!.sub).catch((err) => {
+    res.status(500).send(err);
+  })
   res.send(userGames);
 })
 

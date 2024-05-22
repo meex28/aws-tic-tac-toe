@@ -1,12 +1,22 @@
 // TODO: env vars?
 import {useRouter} from "vue-router";
 import {useFetch, useStorage} from "@vueuse/core";
+import {CognitoRefreshToken, CognitoUser, CognitoUserPool} from 'amazon-cognito-identity-js';
+import {onMounted, ref} from "vue";
 
 const clientId = '2jbpf4smqhtoklvduiat62vjs8';
 const region = 'us-east-1';
 const domain = `tic-tac-toe-app.auth.${region}.amazoncognito.com`;
 const redirectUri = 'http://localhost:5173/callback/';
 const logoutUri = 'http://localhost:5173/';
+
+const poolData = {
+  UserPoolId: "us-east-1_8OC2DPj9E",
+  ClientId: "2jbpf4smqhtoklvduiat62vjs8"
+};
+const userPool = new CognitoUserPool(poolData);
+
+const refreshIntervalId = ref<number>();
 
 export const useCognitoAuth = () => {
   const router = useRouter();
@@ -57,26 +67,36 @@ export const useCognitoAuth = () => {
     refreshToken.value = "";
   }
 
-  const refresh = async () => {
-    const {data, error} = await useFetch(`https://${domain}/oauth2/token`, {
-      beforeFetch(ctx) {
-        ctx.options.headers = {
-          ...ctx.options.headers,
-          'Content-Type': 'application/x-www-form-urlencoded'
+  onMounted(() => {
+    if (!refreshIntervalId.value) {
+      refreshIntervalId.value = setInterval(async () => {
+        if (!accessToken.value) return;
+        const expired = JSON.parse(atob(accessToken.value.split('.')[1]))["exp"];
+        if (expired < (Date.now() - 60 * 1000) / 1000) {
+          console.log("Token expired, refreshing...");
+          await refresh();
         }
-      },
-    }).post(new URLSearchParams({
-      grant_type: 'refresh_token',
-      client_id: clientId,
-      refresh_token: refreshToken.value
-    })).json();
-    if (error.value) {
-      console.error(`Error refreshing token: ${error.value}`);
-      return;
+      }, 10000)
     }
-    accessToken.value = data.value.access_token;
-    idToken.value = data.value.id_token;
-    refreshToken.value = data.value.refresh_token;
+  })
+
+  const refresh = async () => {
+    const username = JSON.parse(atob(idToken.value.split('.')[1]))["cognito:username"];
+    const cognitoUser = new CognitoUser({
+      Username: username, // Replace with username
+      Pool: userPool
+    });
+    const refreshTokenObject = new CognitoRefreshToken({RefreshToken: refreshToken.value});
+    cognitoUser.refreshSession(refreshTokenObject, (err, session) => {
+      if (err) {
+        console.error('Error refreshing token:', err);
+      } else {
+        console.log('Access token refreshed successfully!');
+        accessToken.value = session.getAccessToken().getJwtToken();
+        idToken.value = session.getIdToken().getJwtToken();
+        refreshToken.value = session.getRefreshToken().getToken();
+      }
+    });
   }
 
   return {
