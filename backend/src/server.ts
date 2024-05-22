@@ -4,6 +4,9 @@ import cors from "cors";
 import gameResult from './rest/game_result';
 import {Server} from "ws";
 import {onConnection} from "./websocket/ws";
+import dotenv from "dotenv";
+
+dotenv.config();
 
 // Rest API configuration
 export const appRest = express()
