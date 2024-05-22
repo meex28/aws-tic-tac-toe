@@ -1,18 +1,21 @@
 // TODO: env vars?
 import {useRouter} from "vue-router";
-import {useFetch, useStorage} from "@vueuse/core";
+import {useStorage} from "@vueuse/core";
 import {CognitoRefreshToken, CognitoUser, CognitoUserPool} from 'amazon-cognito-identity-js';
 import {onMounted, ref} from "vue";
+import {usePostAuthorizationCode} from "@/composables/api/useCognitoApi";
 
-const clientId = '2jbpf4smqhtoklvduiat62vjs8';
-const region = 'us-east-1';
+const clientId = import.meta.env.VITE_COGNITO_CLIENT_ID;
+const region = import.meta.env.VITE_AWS_REGION;
 const domain = `tic-tac-toe-app.auth.${region}.amazoncognito.com`;
-const redirectUri = 'http://localhost:5173/callback/';
-const logoutUri = 'http://localhost:5173/';
-
+const url = window.location.origin;
+const redirectUri = `${url}/callback/`;
+const logoutUri = `${url}/`;
+const authUrl = `https://${domain}/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=openid+profile+email`;
+const logoutUrl = `https://${domain}/logout?client_id=${clientId}&logout_uri=${logoutUri}`;
 const poolData = {
-  UserPoolId: "us-east-1_8OC2DPj9E",
-  ClientId: "2jbpf4smqhtoklvduiat62vjs8"
+  UserPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
+  ClientId: clientId
 };
 const userPool = new CognitoUserPool(poolData);
 
@@ -24,8 +27,6 @@ export const useCognitoAuth = () => {
   const idToken = useStorage<string>('id_token', "");
   const refreshToken = useStorage<string>('refresh_token', "");
   // TODO: scope?
-  const authUrl = `https://${domain}/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=openid+profile+email`;
-  const logoutUrl = `https://${domain}/logout?client_id=${clientId}&logout_uri=${logoutUri}`;
 
   const signIn = () => {
     window.location.href = authUrl;
@@ -37,19 +38,7 @@ export const useCognitoAuth = () => {
       console.error('No code found in URL');
       return;
     }
-    const {data, error} = await useFetch(`https://${domain}/oauth2/token`, {
-      beforeFetch(ctx) {
-        ctx.options.headers = {
-          ...ctx.options.headers,
-          'Content-Type': 'application/x-www-form-urlencoded'
-        }
-      },
-    }).post(new URLSearchParams({
-      grant_type: 'authorization_code',
-      client_id: clientId,
-      code: code,
-      redirect_uri: redirectUri
-    })).json();
+    const {data, error} = await usePostAuthorizationCode(domain, clientId, code, redirectUri);
     if (error.value) {
       console.error(`Error exchanging code for token: ${error.value}`);
       return;
@@ -83,7 +72,7 @@ export const useCognitoAuth = () => {
   const refresh = async () => {
     const username = JSON.parse(atob(idToken.value.split('.')[1]))["cognito:username"];
     const cognitoUser = new CognitoUser({
-      Username: username, // Replace with username
+      Username: username,
       Pool: userPool
     });
     const refreshTokenObject = new CognitoRefreshToken({RefreshToken: refreshToken.value});
