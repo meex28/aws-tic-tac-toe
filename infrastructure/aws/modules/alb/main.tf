@@ -3,10 +3,10 @@ resource "aws_security_group" "this" {
   description = "Security group for tic-tac-toe ALB"
   vpc_id      = var.vpc_id
 
-  // Allow HTTP connections
+  // Allow HTTPS connections
   ingress {
-    from_port   = 80
-    to_port     = 80
+    from_port = 443
+    to_port   = 443
     protocol    = "tcp"
     cidr_blocks = ["0.0.0.0/0"]
   }
@@ -27,8 +27,9 @@ resource "aws_alb" "this" {
 
 resource "aws_lb_listener" "this" {
   load_balancer_arn = aws_alb.this.arn
-  port              = 80
-  protocol          = "HTTP"
+  port            = 443
+  protocol        = "HTTPS"
+  certificate_arn = local.certificate_arn
 
   default_action {
     type = "fixed-response"

@@ -45,10 +45,14 @@ variable "lb_listener_arn" {
   type = string
 }
 
-variable "listener_rule_priority" {
-  type = number
-}
-
 variable "listener_rule_path_pattern" {
   type = list(string)
+}
+
+variable "env_vars" {
+  type = map(string)
+}
+
+variable "alb_security_group" {
+  type = string
 }

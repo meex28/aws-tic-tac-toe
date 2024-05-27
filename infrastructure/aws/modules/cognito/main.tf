@@ -20,8 +20,8 @@ resource "aws_cognito_user_pool_client" "this" {
   name                                 = "tic-tac-toe-client"
   user_pool_id                         = aws_cognito_user_pool.this.id
   explicit_auth_flows                  = ["ALLOW_REFRESH_TOKEN_AUTH", "ALLOW_USER_PASSWORD_AUTH"]
-  callback_urls                        = ["http://localhost:5173/callback/"]
-  logout_urls                          = ["http://localhost:5173/"]
+  callback_urls = ["http://localhost:5173/callback/", "${var.application_url}/callback/"]
+  logout_urls   = ["http://localhost:5173/", var.application_url]
   allowed_oauth_flows_user_pool_client = true
   allowed_oauth_flows                  = ["code"]
   allowed_oauth_scopes                 = ["email", "openid", "profile"]
