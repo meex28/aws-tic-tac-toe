@@ -4,7 +4,7 @@ import {computed, ref, watchEffect} from "vue";
 import {useCognitoAuth} from "@/composables/useCognitoAuth";
 
 const backendUrl = import.meta.env.PROD
-  ? `${window.location.href.replace('http', 'ws')}/ws`
+  ? import.meta.env.VITE_BACKEND_WS_URL
   : 'ws://localhost:3000'
 const backendUrlWithToken = ref(backendUrl)
 const {send, data, open, status} = useWebSocket(backendUrlWithToken, {immediate: false})

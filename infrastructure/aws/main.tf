@@ -46,6 +46,8 @@ module "frontend_service" {
     VITE_AWS_REGION           = "us-east-1"
     VITE_COGNITO_CLIENT_ID    = module.cognito.user_pool_client_id
     VITE_COGNITO_USER_POOL_ID = module.cognito.user_pool_id
+    VITE_BACKEND_WS_URL  = "wss://${module.alb.dns_name}/ws/"
+    VITE_BACKEND_API_URL = "https://${module.alb.dns_name}/api"
   }
   alb_security_group = module.alb.security_group_id
 }

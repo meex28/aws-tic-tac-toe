@@ -1,8 +1,7 @@
 import {createFetch} from "@vueuse/core";
 import {useCognitoAuth} from "@/composables/useCognitoAuth";
 
-const prodBackendUrl = window.location.href;
-const backendUrl = import.meta.env.PROD ? `${prodBackendUrl}api` : 'http://localhost:3001/api'
+const backendUrl = import.meta.env.PROD ? import.meta.env.VITE_BACKEND_API_URL : 'http://localhost:3001/api'
 
 export const useApi = createFetch({
   baseUrl: backendUrl,

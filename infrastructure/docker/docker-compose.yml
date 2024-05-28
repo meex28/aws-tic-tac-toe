@@ -6,6 +6,12 @@ services:
     container_name: tic-tac-toe-frontend
     ports:
       - "80:80"
+    environment:
+      VITE_AWS_REGION: us-east-1
+      VITE_COGNITO_CLIENT_ID: 2jbpf4smqhtoklvduiat62vjs8
+      VITE_COGNITO_USER_POOL_ID: us-east-1_8OC2DPj9E
+      VITE_BACKEND_API_URL: https://localhost:2137/api
+      VITE_BACKEND_WS_URL: https://localhost:2137/ws/
   backend:
     image: docker.io/meex8462/tic-tac-toe-backend:latest
     container_name: tic-tac-toe-backend

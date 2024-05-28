@@ -52,7 +52,7 @@ export const mapToGameResult = (session: Session, winner: GameSymbol): GameResul
 
 export const mapToGameResultResponse = (gameResult: GameResult, requestingPlayerSub: string): GameResultResponse => {
   const hasWon = (gameResult.hostPlayerSub == requestingPlayerSub && gameResult.winner == "HOST")
-    || (gameResult.hostPlayerSub == requestingPlayerSub && gameResult.winner == "HOST");
+    || (gameResult.guestPlayerSub == requestingPlayerSub && gameResult.winner == "GUEST");
   return {
     id: gameResult.id,
     hostNickname: gameResult.hostPlayerNickname,
