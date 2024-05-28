@@ -48,6 +48,10 @@ resource "aws_lb_target_group" "this" {
   vpc_id               = var.vpc_id
   target_type          = "ip"
   deregistration_delay = "30" // lower than default 300 to make redeployments faster
+
+  health_check {
+    path = var.port_mappings[count.index].health_check_path
+  }
 }
 
 resource "aws_lb_listener_rule" "this" {
@@ -59,7 +63,7 @@ resource "aws_lb_listener_rule" "this" {
   }
   condition {
     path_pattern {
-      values = var.listener_rule_path_pattern
+      values = [var.port_mappings[count.index].listener_rule_path_pattern]
     }
   }
 }

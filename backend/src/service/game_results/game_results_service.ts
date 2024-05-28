@@ -3,10 +3,15 @@ import {GameResult, GameResultResponse} from "../../model/game_result";
 import {DynamoDB} from "aws-sdk";
 import {mapToGameResult, mapToGameResultResponse} from "../../utils/converters";
 
-const dynamoDb = new DynamoDB.DocumentClient({
-  region: 'us-east-1',
-  endpoint: 'http://localhost:4566'
-});
+const dynamoDbOptions = process.env.MODE == "DEV"
+  ? {
+    region: 'us-east-1',
+    endpoint: 'http://localhost:4566'
+  }
+  : {
+    region: 'us-east-1'
+  }
+const dynamoDb = new DynamoDB.DocumentClient(dynamoDbOptions);
 
 const GAMES_RESULTS_TABLE = 'GamesResultsTable';
 

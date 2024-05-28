@@ -1,3 +1,3 @@
 output "url" {
-  value = "TUTAJ BEDZIE ALB URL :)"
+  value = "https://${module.alb.dns_name}"
 }

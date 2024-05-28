@@ -28,8 +28,10 @@ variable "image" {
 
 variable "port_mappings" {
   type = list(object({
-    container_port = number
-    host_port      = number
+    container_port             = number
+    host_port                  = number
+    health_check_path          = optional(string, "/")
+    listener_rule_path_pattern = string
   }))
 }
 
@@ -43,10 +45,6 @@ variable "subnets_ids" {
 
 variable "lb_listener_arn" {
   type = string
-}
-
-variable "listener_rule_path_pattern" {
-  type = list(string)
 }
 
 variable "env_vars" {

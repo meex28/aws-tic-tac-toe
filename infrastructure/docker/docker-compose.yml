@@ -11,6 +11,11 @@ services:
     container_name: tic-tac-toe-backend
     expose:
       - "3000"
+      - "3001"
+    environment:
+      COGNITO_CLIENT_ID: 2jbpf4smqhtoklvduiat62vjs8
+      COGNITO_USER_POOL_ID: us-east-1_8OC2DPj9E
+      FRONTEND_URL: https://tic-tac-toe-alb-136071776.us-east-1.elb.amazonaws.com
   localstack:
     image: localstack/localstack
     ports:

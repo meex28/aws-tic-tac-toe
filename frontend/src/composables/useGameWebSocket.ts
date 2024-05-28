@@ -3,8 +3,9 @@ import type {BaseMessage} from "@/model/message";
 import {computed, ref, watchEffect} from "vue";
 import {useCognitoAuth} from "@/composables/useCognitoAuth";
 
-const prodBackendUrl = window.location.href.replace('http://', 'ws://').replace('https://', 'wss://')
-const backendUrl = import.meta.env.PROD ? `${prodBackendUrl}/ws` : 'ws://localhost:3000'
+const backendUrl = import.meta.env.PROD
+  ? `${window.location.href.replace('http', 'ws')}/ws`
+  : 'ws://localhost:3000'
 const backendUrlWithToken = ref(backendUrl)
 const {send, data, open, status} = useWebSocket(backendUrlWithToken, {immediate: false})
 
