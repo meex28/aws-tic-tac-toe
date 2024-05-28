@@ -46,9 +46,12 @@ const title = computed(() => isAuthorized.value
 
 <style lang="scss" scoped>
 .container {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+
   h1 {
     font-size: 24px;
-    margin-bottom: 20px;
     color: white;
   }
 
@@ -58,10 +61,6 @@ const title = computed(() => isAuthorized.value
     width: 100%;
     height: 40px;
     margin-bottom: 20px;
-  }
-
-  button:last-child {
-    margin-top: 10px;
   }
 }
 </style>
