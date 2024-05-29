@@ -5,13 +5,18 @@ import {Router} from "express";
 const router = Router();
 
 router.get('/', async (req, res) => {
-  const token = req.headers.authorization?.split(" ")[1]
-  // TODO: catching unauthorized error
+  const tokenSplit = req.headers.authorization?.split(" ")
+  if (tokenSplit === undefined || tokenSplit.length < 2) {
+    res.status(401).send("Unauthorized");
+    return;
+  }
+  const token = tokenSplit[1]
   const tokenPayload = await authorizeCognitoJwtToken(token ?? "").catch((err) => {
     console.error(err)
     res.status(401).send("Unauthorized");
   })
   const userGames = await getUserGamesResults(tokenPayload!!.sub).catch((err) => {
+    console.log(err)
     res.status(500).send(err);
   })
   res.send(userGames);

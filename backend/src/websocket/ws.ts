@@ -22,7 +22,12 @@ const processMessage = (ws: WebSocket, ms: WebSocket.RawData, token: CognitoAcce
 }
 
 export const onConnection = async (ws: InstanceType<any>, request: IncomingMessage) => {
-  const urlToken = new URLSearchParams(request.url?.split('?')[1]).get('token');
+  let urlToken!: string | null;
+  try {
+    urlToken = new URLSearchParams(request.url?.split('?')[1]).get('token');
+  } catch (err) {
+    console.log(err)
+  }
   await authorizeCognitoJwtToken(urlToken ?? "").then((token) => {
     console.log(`A new connection is established! Player: ${token.username}`);
     ws.on('message', (ms: WebSocket.RawData) => processMessage(ws, ms, token));

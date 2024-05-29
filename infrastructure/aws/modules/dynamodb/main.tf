@@ -1,3 +1,5 @@
+data "aws_caller_identity" "current" {}
+
 resource "aws_dynamodb_table" "games_table" {
   name         = "GamesResultsTable"
   billing_mode = "PAY_PER_REQUEST"
@@ -39,14 +41,15 @@ resource "aws_dynamodb_resource_policy" "games_table_policy" {
         Effect    = "Deny",
         Principal = "*",
         "NotAction" : [
+          "dynamodb:PutItem", // tasks IAM role doesn't include it so set it here
           "dynamodb:*ResourcePolicy", // remain it to be able to update the policy in the future
           "dynamodb:List*",
           "dynamodb:Describe*"
         ],
         Resource = aws_dynamodb_table.games_table.arn,
         Condition = {
-          StringNotEquals = {
-            "aws:SourceArn" : var.iam_role
+          StringLike = {
+            "aws:SourceArn" : "arn:aws:sts::${data.aws_caller_identity.current.account_id}:assumed-role/LabRole/*"
           }
         }
       }
