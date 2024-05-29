@@ -89,3 +89,8 @@ module "backend_service" {
   }
   alb_security_group = module.alb.security_group_id
 }
+
+module "cloudwatch_alarms" {
+  source         = "./modules/cloudwatch_alarms"
+  alb_arn_suffix = module.alb.arn_suffix
+}

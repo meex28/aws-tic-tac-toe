@@ -9,3 +9,7 @@ output "security_group_id" {
 output "dns_name" {
   value = aws_alb.this.dns_name
 }
+
+output "arn_suffix" {
+  value = aws_alb.this.arn_suffix
+}
