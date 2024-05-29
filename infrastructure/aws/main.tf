@@ -1,3 +1,5 @@
+data "aws_region" "current" {}
+
 module "vpc" {
   source = "./modules/vpc"
 }
@@ -8,7 +10,9 @@ module "cognito" {
 }
 
 module "dynamodb" {
-  source = "./modules/dynamodb"
+  source   = "./modules/dynamodb"
+  iam_role = local.task_role
+  region   = data.aws_region.current.name
 }
 
 module "alb" {
@@ -75,9 +79,9 @@ module "backend_service" {
       listener_rule_path_pattern = "/ws/*"
     }
   ]
-  subnets_ids                = module.vpc.public_subnets_ids
-  vpc_id                     = module.vpc.vpc_id
-  lb_listener_arn            = module.alb.listener_arn
+  subnets_ids     = module.vpc.public_subnets_ids
+  vpc_id          = module.vpc.vpc_id
+  lb_listener_arn = module.alb.listener_arn
   env_vars = {
     COGNITO_CLIENT_ID    = module.cognito.user_pool_client_id
     COGNITO_USER_POOL_ID = module.cognito.user_pool_id

@@ -12,7 +12,7 @@ const url = window.location.origin;
 const redirectUri = `${url}/callback/`;
 const logoutUri = `${url}/`;
 const authUrl = `https://${domain}/oauth2/authorize?response_type=code&client_id=${clientId}&redirect_uri=${redirectUri}&scope=openid+profile+email`;
-const logoutUrl = `https://${domain}/logout?client_id=${clientId}&logout_uri=${logoutUri}&redirect_uri=${logoutUri}`;
+const logoutUrl = `https://${domain}/logout?client_id=${clientId}&logout_uri=${logoutUri}`;
 const poolData = {
   UserPoolId: import.meta.env.VITE_COGNITO_USER_POOL_ID,
   ClientId: clientId
